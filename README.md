@@ -1,0 +1,39 @@
+# GiTCG — GitHub Profile Cards
+
+Generate a trading card from any GitHub profile. Score is calculated from real stats fetched via the GitHub API and the card is rendered as a single self-contained HTML file.
+
+## Scoring
+
+Each metric uses a logarithmic curve so gains are meaningful at every level, not just for top accounts. The total is capped at 100.
+
+| Metric       | Max pts | Full score at    |
+|--------------|--------:|-----------------|
+| Stars        | 35      | 100k stars      |
+| Followers    | 30      | 10k followers   |
+| PRs          | 20      | 1k pull requests|
+| Issues       | 15      | 1k issues       |
+| Stars/yr     | 10      | 1k stars/year   |
+| Avg. Stars   | 15      | 1k avg per repo |
+| Languages    | 10      | 5+ languages    |
+| Account Age  | 10      | 8+ years        |
+
+| Score  | Tier      |
+|-------:|-----------|
+| 0–19   | Common    |
+| 20–39  | Uncommon  |
+| 40–59  | Rare      |
+| 60–79  | Epic      |
+| 80–100 | Legendary |
+
+## Development
+
+```bash
+yarn install
+yarn dev        # http://localhost:8081
+yarn build      # outputs dist/index.html (single file)
+yarn typecheck
+yarn lint
+```
+
+To preview a specific rarity tier during development, append `?rarity=legendary` (or any tier name) to the URL.
+

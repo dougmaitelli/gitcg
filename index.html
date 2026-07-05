@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GiTCG — GitHub Profile Cards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/styles.css">
+</head>
+<body>
+  <div class="bg-mesh"></div>
+  <canvas id="bgCanvas"></canvas>
+  <div class="app">
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-eyebrow">// collectible developer cards</div>
+      <h1 class="hero-title">Gi<span>TCG</span></h1>
+      <p class="hero-sub">Enter a GitHub username. Receive a card worthy of your code.</p>
+      <form class="search-form" id="searchForm" autocomplete="off">
+        <div class="input-wrap">
+          <input type="text" id="usernameInput" placeholder="github username..." spellcheck="false" />
+        </div>
+        <button type="submit" class="search-btn" id="generateBtn">GENERATE CARD</button>
+        <div class="error-box" id="errorBox"></div>
+      </form>
+    </section>
+
+    <!-- LOADING -->
+    <div class="loading" id="loading">
+      <div class="loader-ring"></div>
+      <div class="loader-text" id="loadingText">ACCESSING GITHUB API...</div>
+    </div>
+
+    <!-- CARD SECTION -->
+    <section class="card-section" id="cardSection">
+      <div class="score-line" id="scoreLine"></div>
+      <div class="card-scene" id="cardScene">
+        <div class="card" id="card">
+          <div class="card-inner" id="cardInner"></div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="card-btn" id="backBtn">← GENERATE ANOTHER</button>
+        <button class="card-btn" id="exportBtn">↓ EXPORT PNG</button>
+      </div>
+    </section>
+
+  </div>
+
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
