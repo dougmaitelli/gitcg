@@ -4,7 +4,7 @@ import { toPng } from "html-to-image";
 
 import { initStars } from "./background";
 import { buildArtShapes, buildCard, spawnParticles } from "./card";
-import { init3D } from "./effects";
+import { destroy3D, init3D } from "./effects";
 import { fetchGH } from "./github";
 import { findTierByName, genCard } from "./rarity";
 
@@ -95,6 +95,7 @@ async function generate(username: string): Promise<void> {
 }
 
 function showHero(): void {
+  destroy3D();
   cardSection.classList.remove("show");
   hero.style.display = "";
   usernameInput.value = "";

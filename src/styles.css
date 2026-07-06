@@ -278,6 +278,16 @@ body {
   zoom: 1.5;
 }
 
+@media (max-width: 500px) {
+  .card-scene {
+    zoom: 1;
+  }
+  .card-section {
+    padding: 1.5rem 1rem 2rem;
+    gap: 1rem;
+  }
+}
+
 /* ── Card ── */
 .card {
   width: 320px;
