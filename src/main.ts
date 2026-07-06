@@ -8,6 +8,8 @@ import { init3D } from "./effects";
 import { fetchGH } from "./github";
 import { findTierByName, genCard } from "./rarity";
 
+const getUsername = () => window.location.hash.slice(1).trim();
+
 // ── Background ──
 initStars();
 
@@ -85,7 +87,7 @@ async function generate(username: string): Promise<void> {
     hideLoading();
     hero.style.display = "none";
     cardSection.classList.add("show");
-    history.pushState({ username }, "", `/${username}${window.location.search}`);
+    history.pushState({ username }, "", `#${username}`);
   } catch (err) {
     hideLoading();
     showErr(err instanceof Error ? err.message : "Something went wrong. Please try again.");
@@ -120,12 +122,12 @@ searchForm.addEventListener("submit", (e) => {
 });
 
 backBtn.addEventListener("click", () => {
-  history.pushState(null, "", "/");
+  history.pushState(null, "", window.location.pathname);
   showHero();
 });
 
 exportBtn.addEventListener("click", async () => {
-  const username = window.location.pathname.slice(1).trim() || "gitcg";
+  const username = getUsername() || "gitcg";
   const prevRx = card.style.getPropertyValue("--rx");
   const prevRy = card.style.getPropertyValue("--ry");
 
@@ -154,8 +156,8 @@ exportBtn.addEventListener("click", async () => {
   }
 });
 
-window.addEventListener("popstate", () => {
-  const username = window.location.pathname.slice(1).trim();
+window.addEventListener("hashchange", () => {
+  const username = getUsername();
 
   if (username) {
     usernameInput.value = username;
@@ -168,7 +170,7 @@ window.addEventListener("popstate", () => {
 usernameInput.addEventListener("input", hideErr);
 
 // ── Load from URL on entry ──
-const initialUsername = window.location.pathname.slice(1).trim();
+const initialUsername = getUsername();
 
 if (initialUsername) {
   usernameInput.value = initialUsername;
