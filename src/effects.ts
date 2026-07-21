@@ -86,8 +86,8 @@ function initAccelerometer(
 
         // Treat the current viewing angle as neutral. The baseline slowly follows the device,
         // producing a temporary tilt from movement that settles back to center when held still.
-        const settleTime = 1800;
-        const follow = 1 - Math.exp(-elapsed / settleTime);
+        const settleDuration = 1800;
+        const follow = 1 - Math.exp((-elapsed * Math.log(100)) / settleDuration);
 
         baselineGamma += (e.gamma - baselineGamma) * follow;
         baselineBeta += (e.beta - baselineBeta) * follow;
