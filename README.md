@@ -4,7 +4,7 @@ Generate a trading card from any GitHub profile. Score is calculated from real s
 
 ## Scoring
 
-Each metric uses a logarithmic curve so gains are meaningful at every level, not just for top accounts. The total is capped at 100.
+Each metric uses a logarithmic curve so gains are meaningful at every level, not just for top accounts. Metrics are individually capped and their combined score is capped at 100, allowing different kinds of GitHub activity to reach the top tiers. Repository metrics count original repositories only and include all repository pages returned by GitHub.
 
 | Metric       | Max pts | Full score at    |
 |--------------|--------:|-----------------|
@@ -36,4 +36,3 @@ yarn lint
 ```
 
 To preview a specific rarity tier during development, append `?rarity=legendary` (or any tier name) to the URL.
-

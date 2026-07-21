@@ -2,13 +2,13 @@ import { getCached, setCache } from "./cache";
 import type { GHRepo, GHUser, UserStats } from "./types";
 
 export async function fetchGH(username: string): Promise<UserStats> {
-  const cached = getCached(username);
+  const cached = getCached<UserStats>(username);
 
   if (cached) return cached;
 
   const [ur, rr, pr, ir] = await Promise.all([
     fetch(`https://api.github.com/users/${username}`),
-    fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=stars`),
+    fetch(`https://api.github.com/users/${username}/repos?per_page=100&page=1&type=owner`),
     fetch(`https://api.github.com/search/issues?q=author:${username}+type:pr&per_page=1`),
     fetch(`https://api.github.com/search/issues?q=author:${username}+type:issue&per_page=1`),
   ]);
@@ -30,7 +30,26 @@ export async function fetchGH(username: string): Promise<UserStats> {
 
   const user: GHUser = (await ur.json()) as GHUser;
   const raw: unknown = rr.ok ? await rr.json() : [];
-  const arr: GHRepo[] = Array.isArray(raw) ? (raw as GHRepo[]) : [];
+  const firstPage: GHRepo[] = Array.isArray(raw) ? (raw as GHRepo[]) : [];
+  const allRepos = [...firstPage];
+
+  for (let page = 2; firstPage.length === 100; page++) {
+    const response = await fetch(
+      `https://api.github.com/users/${username}/repos?per_page=100&page=${page}&type=owner`,
+    );
+
+    if (!response.ok) break;
+
+    const pageData: unknown = await response.json();
+    const pageRepos = Array.isArray(pageData) ? (pageData as GHRepo[]) : [];
+
+    allRepos.push(...pageRepos);
+
+    if (pageRepos.length < 100) break;
+  }
+
+  // Fork stars belong to the upstream project, so card metrics only use original repositories.
+  const arr = allRepos.filter((repo) => !repo.fork);
 
   const totalStars = arr.reduce((sum, r) => sum + (r.stargazers_count || 0), 0);
   const langs = [...new Set(arr.filter((r) => r.language).map((r) => r.language as string))].slice(

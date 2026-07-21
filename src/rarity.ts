@@ -73,18 +73,17 @@ export function genCard({
   totalIssues,
 }: UserStats): UserCardInfo {
   const years = (Date.now() - new Date(user.created_at).getTime()) / MS_PER_YEAR;
-  const originalRepos = repos.filter((r) => !r.fork);
   const starsPerYear = totalStars / Math.max(years, 1);
-  const avgStars = totalStars / Math.max(originalRepos.length, 1);
+  const avgStars = totalStars / Math.max(repos.length, 1);
 
   const uniqueLangs = new Set(repos.filter((r) => r.language).map((r) => r.language)).size;
 
-  const starsScore = Math.log10(totalStars + 1) * 7; // ~35 at 100k stars
-  const followersScore = Math.log10(user.followers + 1) * 7.5; // ~30 at 10k followers
-  const prsScore = Math.log10(totalPRs + 1) * 6.67; // ~20 at 1k PRs
-  const issuesScore = Math.log10(totalIssues + 1) * 5; // ~15 at 1k issues
-  const starsPerYearScore = Math.log10(starsPerYear + 1) * 3.33; // ~10 at 1k stars/year
-  const avgStarsScore = Math.log10(avgStars + 1) * 5; // ~15 at 1k avg stars/repo
+  const starsScore = Math.min(Math.log10(totalStars + 1) * 7, 35); // 35 at ~100k stars
+  const followersScore = Math.min(Math.log10(user.followers + 1) * 7.5, 30); // 30 at ~10k followers
+  const prsScore = Math.min(Math.log10(totalPRs + 1) * 6.67, 20); // 20 at ~1k PRs
+  const issuesScore = Math.min(Math.log10(totalIssues + 1) * 5, 15); // 15 at ~1k issues
+  const starsPerYearScore = Math.min(Math.log10(starsPerYear + 1) * 3.33, 10); // 10 at ~1k stars/year
+  const avgStarsScore = Math.min(Math.log10(avgStars + 1) * 5, 15); // 15 at ~1k avg stars/repo
   const languagesScore = Math.min(uniqueLangs * 2, 10); // ~10 at 5+ languages
   const ageScore = Math.min(years * 1.25, 10); // ~10 at 8+ years
 

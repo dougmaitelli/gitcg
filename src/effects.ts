@@ -63,14 +63,39 @@ function initAccelerometer(
   signal: AbortSignal,
 ) {
   const startListening = () => {
+    let baselineGamma: number | null = null;
+    let baselineBeta: number | null = null;
+    let lastTime = performance.now();
+
     window.addEventListener(
       "deviceorientation",
       (e) => {
-        // gamma: left-right tilt (-90..90), beta: front-back (0..180 in portrait ~90 = upright)
-        const gamma = e.gamma ?? 0;
-        const beta = e.beta ?? 90;
-        const rotY = clamp(gamma / 30, -1, 1) * 13;
-        const rotX = clamp((90 - beta) / 30, -1, 1) * -13;
+        if (e.gamma === null || e.beta === null) return;
+
+        const now = performance.now();
+        const elapsed = Math.min(now - lastTime, 100);
+
+        lastTime = now;
+
+        if (baselineGamma === null || baselineBeta === null) {
+          baselineGamma = e.gamma;
+          baselineBeta = e.beta;
+
+          return;
+        }
+
+        // Treat the current viewing angle as neutral. The baseline slowly follows the device,
+        // producing a temporary tilt from movement that settles back to center when held still.
+        const settleTime = 1800;
+        const follow = 1 - Math.exp(-elapsed / settleTime);
+
+        baselineGamma += (e.gamma - baselineGamma) * follow;
+        baselineBeta += (e.beta - baselineBeta) * follow;
+
+        const relativeGamma = e.gamma - baselineGamma;
+        const relativeBeta = e.beta - baselineBeta;
+        const rotY = clamp(relativeGamma / 18, -1, 1) * 13;
+        const rotX = clamp(relativeBeta / 18, -1, 1) * -13;
 
         setTilt(card, foilLayer, glossLayer, rotX, rotY);
       },
