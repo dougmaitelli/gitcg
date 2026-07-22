@@ -2,7 +2,9 @@
 
 Generate a trading card from any GitHub profile. Score is calculated from real stats fetched via the GitHub API and the card is rendered as a single self-contained HTML file.
 
-![Animated demo of GitHub profile cards](card-demo.gif)
+<p align="center">
+  <img src="card-demo.gif" alt="Animated demo of GitHub profile cards">
+</p>
 
 ## Scoring
 
