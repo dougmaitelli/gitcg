@@ -1,9 +1,11 @@
-# GiTCG — GitHub Profile Cards
+<p align="center">
+  <img src="assets/banner.png" alt="GiTCG — GitHub Profile Cards" width="100%">
+</p>
 
 Generate a trading card from any GitHub profile. Score is calculated from real stats fetched via the GitHub API and the card is rendered as a single self-contained HTML file.
 
 <p align="center">
-  <img src="card-demo.gif" alt="Animated demo of GitHub profile cards">
+  <img src="assets/card-demo.gif" alt="Animated demo of GitHub profile cards">
 </p>
 
 ## Scoring
@@ -47,7 +49,7 @@ Generate a short, looping GIF that cycles through deterministic sample cards:
 
 ```bash
 yarn playwright install chromium # first run only
-yarn demo:gif                    # writes card-demo.gif
+yarn demo:gif                    # writes assets/card-demo.gif
 ```
 
 The recorder requires `ffmpeg`. Pass a path to write somewhere else, for example

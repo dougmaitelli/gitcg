@@ -6,8 +6,8 @@ import { dirname, resolve } from "node:path";
 import { chromium } from "playwright";
 import { createServer } from "vite";
 
-const output = resolve(process.argv[2] ?? "card-demo.gif");
-const demoAvatar = `data:image/webp;base64,${readFileSync(resolve("demo-avatar.webp")).toString("base64")}`;
+const output = resolve(process.argv[2] ?? "assets/card-demo.gif");
+const demoAvatar = `data:image/webp;base64,${readFileSync(resolve("assets/demo-avatar.webp")).toString("base64")}`;
 const frameRate = 10;
 const framesPerCard = 14;
 const profiles = [
