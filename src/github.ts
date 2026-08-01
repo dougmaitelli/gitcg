@@ -8,11 +8,10 @@ function repositoryLanguageScore(repo: GHRepo, now: number): number {
   const ageYears = Number.isFinite(lastActivity)
     ? Math.max(0, (now - lastActivity) / MS_PER_YEAR)
     : 10;
-  const sizeScore = Math.log10(Math.max(repo.size || 0, 0) + 1) * 2;
   const starsScore = Math.log10(Math.max(repo.stargazers_count || 0, 0) + 1) * 3;
   const recencyScore = 5 / (1 + ageYears);
 
-  return 1 + sizeScore + starsScore + recencyScore;
+  return 1 + starsScore + recencyScore;
 }
 
 export async function fetchGH(username: string): Promise<UserStats> {
