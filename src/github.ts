@@ -1,6 +1,20 @@
 import { getCached, setCache } from "./cache";
 import type { GHRepo, GHUser, UserStats } from "./types";
 
+const MS_PER_YEAR = 31_557_600_000;
+
+function repositoryLanguageScore(repo: GHRepo, now: number): number {
+  const lastActivity = new Date(repo.pushed_at ?? repo.created_at).getTime();
+  const ageYears = Number.isFinite(lastActivity)
+    ? Math.max(0, (now - lastActivity) / MS_PER_YEAR)
+    : 10;
+  const sizeScore = Math.log10(Math.max(repo.size || 0, 0) + 1) * 2;
+  const starsScore = Math.log10(Math.max(repo.stargazers_count || 0, 0) + 1) * 3;
+  const recencyScore = 5 / (1 + ageYears);
+
+  return 1 + sizeScore + starsScore + recencyScore;
+}
+
 export async function fetchGH(username: string): Promise<UserStats> {
   const cached = getCached<UserStats>(username);
 
@@ -52,23 +66,24 @@ export async function fetchGH(username: string): Promise<UserStats> {
   const arr = allRepos.filter((repo) => !repo.fork);
 
   const totalStars = arr.reduce((sum, r) => sum + (r.stargazers_count || 0), 0);
-  const languageUsage = arr.reduce<Map<string, { size: number; repos: number }>>((usage, repo) => {
+  const now = Date.now();
+  const languageRanks = arr.reduce<Map<string, { score: number; repos: number }>>((ranks, repo) => {
     if (repo.language) {
-      const current = usage.get(repo.language) ?? { size: 0, repos: 0 };
+      const current = ranks.get(repo.language) ?? { score: 0, repos: 0 };
 
-      usage.set(repo.language, {
-        size: current.size + Math.max(repo.size || 0, 1),
+      ranks.set(repo.language, {
+        score: current.score + repositoryLanguageScore(repo, now),
         repos: current.repos + 1,
       });
     }
 
-    return usage;
+    return ranks;
   }, new Map());
-  const langs = [...languageUsage.entries()]
+  const langs = [...languageRanks.entries()]
     .sort(
-      ([languageA, usageA], [languageB, usageB]) =>
-        usageB.size - usageA.size ||
-        usageB.repos - usageA.repos ||
+      ([languageA, rankA], [languageB, rankB]) =>
+        rankB.score - rankA.score ||
+        rankB.repos - rankA.repos ||
         languageA.localeCompare(languageB),
     )
     .slice(0, 3)

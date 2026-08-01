@@ -28,6 +28,8 @@ export interface GHRepo {
   language: string | null;
   size: number;
   stargazers_count: number;
+  created_at: string;
+  pushed_at: string | null;
   fork: boolean;
   open_issues_count: number;
 }
