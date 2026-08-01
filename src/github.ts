@@ -52,10 +52,27 @@ export async function fetchGH(username: string): Promise<UserStats> {
   const arr = allRepos.filter((repo) => !repo.fork);
 
   const totalStars = arr.reduce((sum, r) => sum + (r.stargazers_count || 0), 0);
-  const langs = [...new Set(arr.filter((r) => r.language).map((r) => r.language as string))].slice(
-    0,
-    3,
-  );
+  const languageUsage = arr.reduce<Map<string, { size: number; repos: number }>>((usage, repo) => {
+    if (repo.language) {
+      const current = usage.get(repo.language) ?? { size: 0, repos: 0 };
+
+      usage.set(repo.language, {
+        size: current.size + Math.max(repo.size || 0, 1),
+        repos: current.repos + 1,
+      });
+    }
+
+    return usage;
+  }, new Map());
+  const langs = [...languageUsage.entries()]
+    .sort(
+      ([languageA, usageA], [languageB, usageB]) =>
+        usageB.size - usageA.size ||
+        usageB.repos - usageA.repos ||
+        languageA.localeCompare(languageB),
+    )
+    .slice(0, 3)
+    .map(([language]) => language);
 
   const prData = pr.ok ? ((await pr.json()) as { total_count: number }) : { total_count: 0 };
   const issueData = ir.ok ? ((await ir.json()) as { total_count: number }) : { total_count: 0 };

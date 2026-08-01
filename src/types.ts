@@ -26,6 +26,7 @@ export interface GHUser {
 export interface GHRepo {
   name: string;
   language: string | null;
+  size: number;
   stargazers_count: number;
   fork: boolean;
   open_issues_count: number;
