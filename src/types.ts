@@ -2,6 +2,7 @@ export interface UserStats {
   user: GHUser;
   repos: GHRepo[];
   totalStars: number;
+  totalCommits: number;
   totalPRs: number;
   totalIssues: number;
   langs: string[];

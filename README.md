@@ -16,9 +16,9 @@ Each metric uses a logarithmic curve so gains are meaningful at every level, not
 | ----------- | ------: | ---------------- |
 | Stars       |      35 | 100k stars       |
 | Followers   |      30 | 10k followers    |
+| Commits     |      15 | 5k commits       |
 | PRs         |      20 | 1k pull requests |
 | Issues      |      15 | 1k issues        |
-| Stars/yr    |      10 | 1k stars/year    |
 | Avg. Stars  |      15 | 1k avg per repo  |
 | Languages   |      10 | 5+ languages     |
 | Account Age |      10 | 8+ years         |

@@ -16,6 +16,7 @@ const profiles = [
     tier: "uncommon",
     stars: 20,
     followers: 8,
+    commits: 1,
     prs: 4,
     issues: 2,
     years: 2,
@@ -27,6 +28,7 @@ const profiles = [
     tier: "rare",
     stars: 50,
     followers: 15,
+    commits: 30,
     prs: 8,
     issues: 4,
     years: 3,
@@ -38,6 +40,7 @@ const profiles = [
     tier: "epic",
     stars: 150,
     followers: 40,
+    commits: 100,
     prs: 20,
     issues: 10,
     years: 4,
@@ -49,6 +52,7 @@ const profiles = [
     tier: "legendary",
     stars: 500,
     followers: 100,
+    commits: 300,
     prs: 50,
     issues: 20,
     years: 6,
@@ -113,7 +117,9 @@ try {
       profiles.find(({ login }) => `${url.pathname}${url.search}`.includes(login)) ?? profiles[0];
     let body;
 
-    if (url.pathname === "/search/issues") {
+    if (url.pathname === "/search/commits") {
+      body = { total_count: profile.commits };
+    } else if (url.pathname === "/search/issues") {
       body = {
         total_count: url.searchParams.get("q")?.includes("type:pr") ? profile.prs : profile.issues,
       };

@@ -17,11 +17,12 @@ function repositoryLanguageScore(repo: GHRepo, now: number): number {
 export async function fetchGH(username: string): Promise<UserStats> {
   const cached = getCached<UserStats>(username);
 
-  if (cached) return cached;
+  if (cached && typeof cached.totalCommits === "number") return cached;
 
-  const [ur, rr, pr, ir] = await Promise.all([
+  const [ur, rr, cr, pr, ir] = await Promise.all([
     fetch(`https://api.github.com/users/${username}`),
     fetch(`https://api.github.com/users/${username}/repos?per_page=100&page=1&type=owner`),
+    fetch(`https://api.github.com/search/commits?q=author:${username}&per_page=1`),
     fetch(`https://api.github.com/search/issues?q=author:${username}+type:pr&per_page=1`),
     fetch(`https://api.github.com/search/issues?q=author:${username}+type:issue&per_page=1`),
   ]);
@@ -88,6 +89,7 @@ export async function fetchGH(username: string): Promise<UserStats> {
     .slice(0, 3)
     .map(([language]) => language);
 
+  const commitData = cr.ok ? ((await cr.json()) as { total_count: number }) : { total_count: 0 };
   const prData = pr.ok ? ((await pr.json()) as { total_count: number }) : { total_count: 0 };
   const issueData = ir.ok ? ((await ir.json()) as { total_count: number }) : { total_count: 0 };
 
@@ -95,6 +97,7 @@ export async function fetchGH(username: string): Promise<UserStats> {
     user,
     repos: arr,
     totalStars,
+    totalCommits: commitData.total_count,
     totalPRs: prData.total_count,
     totalIssues: issueData.total_count,
     langs,
