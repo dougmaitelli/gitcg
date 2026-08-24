@@ -13,7 +13,7 @@
     "lint:fix": "eslint --fix src/ && prettier --write \"src/\" \"*.{js,ts,json}\""
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/eslint-plugin": "^8.67.0",
     "@typescript-eslint/parser": "^8.67.0",
     "eslint": "^10.8.1",
     "eslint-config-prettier": "^10.1.8",
